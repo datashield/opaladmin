@@ -4,8 +4,12 @@
 #' @param pkg Package name.
 #' @export
 opal.install_package <- function(opal, pkg) {
-  if (!opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''))) {
-    opal.execute(opal, paste('install.packages("', pkg, '", dependencies=TRUE)', sep=''), FALSE)
+  if(is.list(opal)){
+    lapply(opal, function(o){opal.install_package(o, pkg)})
+  } else {
+    if (!opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''))) {
+      opal.execute(opal, paste('install.packages("', pkg, '", dependencies=TRUE)', sep=''), FALSE)
+    }
   }
 }
 
@@ -43,7 +47,7 @@ opal.installed_devtools <- function(opal) {
   opal.installed_package(opal,'devtools')
 }
 
-#' Install a package from a source repository on GitHub.
+#' Install a package from a source repository on GitHub. Makes sure devtools package is available.
 #'
 #' @param opal Opal object.
 #' @param pkg Package name.
@@ -58,7 +62,7 @@ opal.install_github <- function(opal, pkg , username=getOption("github.user"), r
   opal.execute(opal, cmd, FALSE)
 }
 
-#' Install a package from Datashield source repository on GitHub.
+#' Install a package from Datashield public source repository on GitHub.
 #'
 #' @param opal Opal object. 
 #' @param pkg Package name.

@@ -1,6 +1,6 @@
 \name{opal.install_datashield}
 \alias{opal.install_datashield}
-\title{Install a package from Datashield source repository on GitHub.}
+\title{Install a package from Datashield public source repository on GitHub.}
 \usage{
   opal.install_datashield(opal, pkg, ref = "master")
 }
@@ -13,7 +13,7 @@
   or branch name. Defaults to "master".}
 }
 \description{
-  Install a package from Datashield source repository on
-  GitHub.
+  Install a package from Datashield public source
+  repository on GitHub.
 }
 

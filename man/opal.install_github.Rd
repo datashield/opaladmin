@@ -1,6 +1,6 @@
 \name{opal.install_github}
 \alias{opal.install_github}
-\title{Install a package from a source repository on GitHub.}
+\title{Install a package from a source repository on GitHub. Makes sure devtools package is available.}
 \usage{
   opal.install_github(opal, pkg,
     username = getOption("github.user"), ref = "master",
@@ -24,5 +24,6 @@
 }
 \description{
   Install a package from a source repository on GitHub.
+  Makes sure devtools package is available.
 }
 
