@@ -1,0 +1,16 @@
+Package: opaldev
+Version: 2.0
+Title: Opal R development API
+Author: OBiBa <info@obiba.org>
+Maintainer: OBiBa <info@obiba.org>
+Description: R toolbox to configure the R server behind Opal.
+Depends:
+    opal
+Suggests:
+    devtools,
+    roxygen2
+License: GPL (= 3)
+URL: http://www.obiba.org
+BugReports: http://jira.obiba.org
+Collate:
+    'opal.r'

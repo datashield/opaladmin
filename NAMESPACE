@@ -1,0 +1,8 @@
+export(opal.detach_package)
+export(opal.install_datashield)
+export(opal.install_devtools)
+export(opal.installed_devtools)
+export(opal.installed_package)
+export(opal.install_github)
+export(opal.install_package)
+export(opal.remove_package)
