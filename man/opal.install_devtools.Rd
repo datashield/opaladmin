@@ -5,7 +5,7 @@
   opal.install_devtools(opal)
 }
 \arguments{
-  \item{opal}{Opal object.}
+  \item{opal}{Opal object or list of opal objects.}
 }
 \description{
   Install devtools package if not already available.

@@ -7,7 +7,7 @@
     auth_user = NULL, password = NULL)
 }
 \arguments{
-  \item{opal}{Opal object.}
+  \item{opal}{Opal object or list of opal objects.}
 
   \item{pkg}{Package name.}
 

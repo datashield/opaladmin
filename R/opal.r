@@ -1,6 +1,6 @@
 #' Install package if not already available.
 #'
-#' @param opal Opal object.
+#' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @export
 opal.install_package <- function(opal, pkg) {
@@ -15,7 +15,7 @@ opal.install_package <- function(opal, pkg) {
 
 #' Remove package permanently.
 #'
-#' @param opal Opal object.
+#' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @export
 opal.remove_package <- function(opal, pkg) {
@@ -24,7 +24,7 @@ opal.remove_package <- function(opal, pkg) {
 
 #' Check if a package is installed.
 #'
-#' @param opal Opal object.
+#' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @export
 opal.installed_package <- function(opal, pkg) {
@@ -33,7 +33,7 @@ opal.installed_package <- function(opal, pkg) {
 
 #' Install devtools package if not already available.
 #'
-#' @param opal Opal object.
+#' @param opal Opal object or list of opal objects.
 #' @export
 opal.install_devtools <- function(opal) {
   opal.install_package(opal,'devtools')
@@ -41,7 +41,7 @@ opal.install_devtools <- function(opal) {
 
 #' Check if devtools package is installed.
 #'
-#' @param opal Opal object.
+#' @param opal Opal object or list of opal objects.
 #' @export
 opal.installed_devtools <- function(opal) {
   opal.installed_package(opal,'devtools')
@@ -49,7 +49,7 @@ opal.installed_devtools <- function(opal) {
 
 #' Install a package from a source repository on GitHub. Makes sure devtools package is available.
 #'
-#' @param opal Opal object.
+#' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @param username GitHub user name.
 #' @param ref Desired git reference. Could be a commit, tag, or branch name. Defaults to "master".
@@ -64,7 +64,7 @@ opal.install_github <- function(opal, pkg , username=getOption("github.user"), r
 
 #' Install a package from Datashield public source repository on GitHub.
 #'
-#' @param opal Opal object. 
+#' @param opal Opal object or list of opal objects. 
 #' @param pkg Package name.
 #' @param ref Desired git reference. Could be a commit, tag, or branch name. Defaults to "master".
 #' @export
@@ -74,7 +74,7 @@ opal.install_datashield <- function(opal, pkg, ref="master") {
 
 #' Detach package in the current session.
 #'
-#' @param opal Opal object.
+#' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @export
 opal.detach_package <- function(opal, pkg) {

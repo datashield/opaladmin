@@ -5,7 +5,7 @@
   opal.installed_devtools(opal)
 }
 \arguments{
-  \item{opal}{Opal object.}
+  \item{opal}{Opal object or list of opal objects.}
 }
 \description{
   Check if devtools package is installed.
