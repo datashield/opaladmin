@@ -7,7 +7,7 @@ opal.install_package <- function(opal, pkg) {
   if(is.list(opal)){
     lapply(opal, function(o){opal.install_package(o, pkg)})
   } else {
-    if (!opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''))) {
+    if (!opal.installed_package(opal, pkg)) {
       opal.execute(opal, paste('install.packages("', pkg, '", dependencies=TRUE)', sep=''), FALSE)
     }
   }
