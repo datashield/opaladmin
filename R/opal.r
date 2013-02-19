@@ -67,7 +67,7 @@ oadmin.package_description <- function(opal, pkg) {
   if(is.list(opal)){
     lapply(opal, function(o){opal.package_description(o, pkg)})
   } else {
-    inst <- opal.execute(opal, paste('installed.packages(fields=c("Aggregate","Assign"))', sep=''), FALSE)
+    inst <- opal.execute(opal, paste('installed.packages(fields=c("AggregateMethods","AssignMethods"))', sep=''), FALSE)
     desc <- NULL
     for (i in 1:nrow(inst)) {
       if(inst[i]==pkg) { 

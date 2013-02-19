@@ -33,6 +33,7 @@ dsadmin.set_method <- function(opal, name, func=NULL, path=NULL, type="aggregate
     }
     # TODO check if method exists: create or update
     dsadmin.rm_method(opal, name, type=type)
+    #print(methodDto)
     opal:::.post(opal, "datashield", "env", type, "methods", body=methodDto, contentType="application/json");
   }
 }
@@ -51,6 +52,28 @@ dsadmin.rm_method <- function(opal, name, type="aggregate") {
   } else {
     # ignore errors and returned value
     resp <- opal:::.delete(opal, "datashield", "env", type, "method", name, callback=function(r){})
+  }
+}
+
+#' Remove all Datashield methods from Opal(s).
+#' 
+#' @title Remove Datashield Methods
+#' 
+#' @param opal Opal object or list of opal objects.
+#' @param name Name of the method, as it is accessed by Datashield users.
+#' @param type Type of the method: "aggregate" or "assign". Default is NULL (=all type of methods).
+#' @export
+dsadmin.rm_methods <- function(opal, type=NULL) {
+  if(is.list(opal)){
+    lapply(opal, function(o){dsadmin.rm_methods(o, type=type)})
+  } else {
+    # ignore errors and returned value
+    if (is.null(type)) {
+      dsadmin.rm_methods(opal, type="aggregate")
+      dsadmin.rm_methods(opal, type="assign")
+    } else {
+      resp <- opal:::.delete(opal, "datashield", "env", type, "methods", callback=function(r){})
+    }
   }
 }
 
@@ -95,8 +118,95 @@ dsadmin.get_methods <- function(opal, type="aggregate") {
 #' @export
 dsadmin.install_package <- function(opal, pkg, ref=NULL) {
   if (is.null(ref)) {
-    oadmin.install_package(opal, pkg)
+    res <- oadmin.install_package(opal, pkg)
   } else {
-    oadmin.install_github(opal, pkg, username="datashield", ref=ref)
+    res <- oadmin.install_github(opal, pkg, username="datashield", ref=ref)
+  }
+  res
+}
+
+#' Declare Datashield aggregate and assign methods as defined by the package.
+#'
+#' @title Set Package Datashield Methods
+#'
+#' @param opal Opal object or list of opal objects. 
+#' @param pkg Package name.
+#' @param type Type of the method: "aggregate" or "assign". Default is NULL (=all type of methods).
+#' @return TRUE if successfull
+#' @export
+dsadmin.set_package_methods <- function(opal, pkg, type=NULL) {
+  if(is.list(opal)){
+    lapply(opal, function(o){dsadmin.set_package_methods(o, pkg, type)})
+  } else {
+    if (oadmin.installed_package(opal,pkg)) {
+      # get description
+      desc <- oadmin.package_description(opal, pkg)
+    
+      .dsadmin.methods_mapper(desc, type, function(map, type) {
+        # apply default mapping function
+        f <- paste(pkg,map[1],sep='::')
+        # apply specified one
+        if(length(map)>1) {
+          f <- map[2]
+        }
+        dsadmin.set_method(opal, map[1], func=f, type=type)
+      })
+      TRUE
+    } else {
+      FALSE
+    }
+  }
+}
+
+#' Remove Datashield aggregate and assign methods defined by the package.
+#'
+#' @title Remove Package Datashield Methods
+#'
+#' @param opal Opal object or list of opal objects. 
+#' @param pkg Package name.
+#' @param type Type of the method: "aggregate" or "assign". Default is NULL (=all type of methods).
+#' @export
+dsadmin.rm_package_methods <- function(opal, pkg, type=NULL) {
+  if(is.list(opal)){
+    lapply(opal, function(o){dsadmin.rm_package_methods(o, pkg, type)})
+  } else {
+    # get description
+    desc <- oadmin.package_description(opal, pkg)
+    
+    .dsadmin.methods_mapper(desc, type, function(map, type) {
+      dsadmin.rm_method(opal, map[1], type=type)
+    })
+  }
+}
+
+.dsadmin.methods_mapper <- function(desc, type, consumer) {
+  # map a symbol to a function name
+  mapper <- function(descValues, type) {
+    .dsadmin.methods_parser(descValues, type, consumer)
+  }
+  
+  if (!is.null(type) && type == "aggregate") {
+    mapper(desc$AggregateMethods, type)
+  } else if (!is.null(type) && type == "assign") {
+    mapper(desc$AssignMethods, type)
+  } else {
+    mapper(desc$AggregateMethods, "aggregate")
+    mapper(desc$AssignMethods, "assign")
+  }
+}
+
+
+#' Parser of methods specified in the Description file.
+#' @keywords internal
+.dsadmin.methods_parser <- function(descValues, type, consumer) {
+  for (str in descValues) {
+    for (splitted in strsplit(str,split=",")) {
+      methods <- gsub("^\\s+|\\s+$", "", splitted)
+      for (m in methods) {
+        # mapping function can have been specified in the Description file
+        map <- strsplit(m,split="=")[[1]]
+        consumer(map, type)
+      }
+    }
   }
 }
