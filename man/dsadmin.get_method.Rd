@@ -1,0 +1,19 @@
+\name{dsadmin.get_method}
+\alias{dsadmin.get_method}
+\title{Get Datashield Method}
+\usage{
+  dsadmin.get_method(opal, name, type = "aggregate")
+}
+\arguments{
+  \item{opal}{Opal object or list of opal objects.}
+
+  \item{name}{Name of the method, as it is accessed by
+  Datashield users.}
+
+  \item{type}{Type of the method: "aggregate" (default) or
+  "assign"}
+}
+\description{
+  Get a Datashield method from Opal(s).
+}
+

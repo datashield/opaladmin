@@ -25,14 +25,15 @@ dsadmin.set_method <- function(opal, name, func=NULL, path=NULL, type="aggregate
     # build method dto
     if(is.null(func)) {
       # read script from file
-      rscript <- paste(readLines(path),collapse="\n")
+      rscript <- paste(readLines(path),collapse="\\n")
+      rscript <- gsub('\"','\\\\"', rscript)
       methodDto <- paste('{"name":"', name, '","DataShield.RScriptDataShieldMethodDto.method":{"script":"', rscript, '"}}', sep='')  
     } else {
       methodDto <- paste('{"name":"', name, '","DataShield.RFunctionDataShieldMethodDto.method":{"func":"', func, '"}}', sep='')
     }
     # TODO check if method exists: create or update
     dsadmin.rm_method(opal, name, type=type)
-    .post(opal, "datashield", "env", type, "methods", body=methodDto, contentType="application/json");
+    opal:::.post(opal, "datashield", "env", type, "methods", body=methodDto, contentType="application/json");
   }
 }
 
@@ -48,7 +49,39 @@ dsadmin.rm_method <- function(opal, name, type="aggregate") {
   if(is.list(opal)){
     lapply(opal, function(o){dsadmin.rm_method(o, name, type=type)})
   } else {
-    .delete(opal, "datashield", "env", type, "method", name)
+    # ignore errors and returned value
+    resp <- opal:::.delete(opal, "datashield", "env", type, "method", name, callback=function(r){})
+  }
+}
+
+#' Get a Datashield method from Opal(s).
+#' 
+#' @title Get Datashield Method
+#' 
+#' @param opal Opal object or list of opal objects.
+#' @param name Name of the method, as it is accessed by Datashield users.
+#' @param type Type of the method: "aggregate" (default) or "assign"
+#' @export
+dsadmin.get_method <- function(opal, name, type="aggregate") {
+  if(is.list(opal)){
+    lapply(opal, function(o){dsadmin.get_method(o, name, type=type)})
+  } else {
+    opal:::.get(opal, "datashield", "env", type, "method", name)
+  }
+}
+
+#' Get Datashield methods from Opal(s).
+#' 
+#' @title Get Datashield Methods
+#' 
+#' @param opal Opal object or list of opal objects.
+#' @param type Type of the method: "aggregate" (default) or "assign"
+#' @export
+dsadmin.get_methods <- function(opal, type="aggregate") {
+  if(is.list(opal)){
+    lapply(opal, function(o){dsadmin.get_methods(o, type=type)})
+  } else {
+    opal:::.get(opal, "datashield", "env", type, "methods")
   }
 }
 
