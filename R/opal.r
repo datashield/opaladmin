@@ -69,10 +69,10 @@ opal.install_github <- function(opal, pkg , username=getOption("github.user"), r
 #' @param ref Desired git reference. Could be a commit, tag, or branch name. Defaults to "master".
 #' @export
 opal.install_datashield <- function(opal, pkg, ref="master") {
-  opal.install_github(opal, pkg, "datashield", ref)
+  opal.install_github(opal, pkg, username="datashield", ref=ref)
 }
 
-#' Detach package in the current session.
+#' Detach package from the current session.
 #'
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
