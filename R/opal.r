@@ -12,13 +12,19 @@
 #'
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
+#' @param repos Character vector, the base URLs of the repositories to use.
 #' @export
-opal.install_package <- function(opal, pkg) {
+opal.install_package <- function(opal, pkg, repos=NULL) {
   if(is.list(opal)){
-    lapply(opal, function(o){opal.install_package(o, pkg)})
+    lapply(opal, function(o){opal.install_package(o, pkg, repos)})
   } else {
     if (!opal.installed_package(opal, pkg)) {
-      opal.execute(opal, paste('install.packages("', pkg, '", dependencies=TRUE)', sep=''), FALSE)
+      # default repos
+      defaultrepos <- c("http://cran.obiba.org/stable","http://cran.rstudio.com")
+      # append user provided ones
+      repostr <- paste('"', append(defaultrepos, repos),'"',collapse=',',sep='')
+      cmd <- paste('install.packages("', pkg, '", repos=c(getOption("repos"),', repostr ,'), dependencies=TRUE)', sep='')
+      resp <- opal.execute(opal, cmd, FALSE)
     }
   }
 }
@@ -29,7 +35,7 @@ opal.install_package <- function(opal, pkg) {
 #' @param pkg Package name.
 #' @export
 opal.remove_package <- function(opal, pkg) {
-  opal.execute(opal, paste('remove.packages("', pkg, '")', sep=''), FALSE)
+  resp <- opal.execute(opal, paste('remove.packages("', pkg, '")', sep=''), FALSE)
 }
 
 #' Check if a package is installed.
@@ -108,5 +114,5 @@ opal.load_package <- function(opal, pkg) {
 #' @param pkg Package name.
 #' @export
 opal.unload_package <- function(opal, pkg) {
-  opal.execute(opal, paste('detach("package:', pkg, '", character.only=TRUE, unload=TRUE)', sep=''), TRUE)
+  resp <- opal.execute(opal, paste('detach("package:', pkg, '", character.only=TRUE, unload=TRUE)', sep=''), TRUE)
 }
