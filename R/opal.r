@@ -1,3 +1,13 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2013 OBiBa. All rights reserved.
+#  
+# This program and the accompanying materials
+# are made available under the terms of the GNU Public License v3.0.
+#  
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#-------------------------------------------------------------------------------
+
 #' Install package if not already available.
 #'
 #' @param opal Opal object or list of opal objects.
@@ -29,6 +39,25 @@ opal.remove_package <- function(opal, pkg) {
 #' @export
 opal.installed_package <- function(opal, pkg) {
   opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''))
+}
+
+#' Get package description from Opal(s).
+#'
+#' @param opal Opal object or list of opal objects.
+#' @param pkg Package name.
+#' @export
+opal.package_description <- function(opal, pkg) {
+  if(is.list(opal)){
+    lapply(opal, function(o){opal.package_description(o, pkg)})
+  } else {
+    inst <- opal.execute(opal, paste('', sep='installed.packages(fields=c("Aggregate","Assign"))'), FALSE)
+    for (i in 1:nrow(inst)) {
+      if(inst[i]==pkg) { 
+        print(inst[i,])
+        break
+      }
+    }
+  }
 }
 
 #' Install devtools package if not already available.
