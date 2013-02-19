@@ -1,8 +1,8 @@
-\name{opal.install_datashield}
-\alias{opal.install_datashield}
+\name{dsadmin.install_datashield}
+\alias{dsadmin.install_datashield}
 \title{Install a package from Datashield public source repository on GitHub.}
 \usage{
-  opal.install_datashield(opal, pkg, ref = "master")
+  dsadmin.install_datashield(opal, pkg, ref = "master")
 }
 \arguments{
   \item{opal}{Opal object or list of opal objects.}

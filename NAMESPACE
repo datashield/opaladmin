@@ -1,6 +1,6 @@
+export(dsadmin.install_datashield)
 export(dsadmin.rm_method)
 export(dsadmin.set_method)
-export(opal.install_datashield)
 export(opal.install_devtools)
 export(opal.installed_devtools)
 export(opal.installed_package)

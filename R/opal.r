@@ -50,13 +50,15 @@ opal.package_description <- function(opal, pkg) {
   if(is.list(opal)){
     lapply(opal, function(o){opal.package_description(o, pkg)})
   } else {
-    inst <- opal.execute(opal, paste('', sep='installed.packages(fields=c("Aggregate","Assign"))'), FALSE)
+    inst <- opal.execute(opal, paste('installed.packages(fields=c("Aggregate","Assign"))', sep=''), FALSE)
+    desc <- NULL
     for (i in 1:nrow(inst)) {
       if(inst[i]==pkg) { 
-        print(inst[i,])
+        desc <- strsplit(inst[i,],"\n")
         break
       }
     }
+    return(desc)
   }
 }
 
@@ -89,16 +91,6 @@ opal.install_github <- function(opal, pkg , username=getOption("github.user"), r
   opal.install_devtools(opal)
   cmd <- paste('devtools::install_github("', pkg, '", username="', username, '", ref="', ref, '")', sep="")
   opal.execute(opal, cmd, FALSE)
-}
-
-#' Install a package from Datashield public source repository on GitHub.
-#'
-#' @param opal Opal object or list of opal objects. 
-#' @param pkg Package name.
-#' @param ref Desired git reference. Could be a commit, tag, or branch name. Defaults to "master".
-#' @export
-opal.install_datashield <- function(opal, pkg, ref="master") {
-  opal.install_github(opal, pkg, username="datashield", ref=ref)
 }
 
 #' Load package in the current session.

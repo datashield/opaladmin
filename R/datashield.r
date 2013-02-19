@@ -51,3 +51,13 @@ dsadmin.rm_method <- function(opal, name, type="aggregate") {
     .delete(opal, "datashield", "env", type, "method", name)
   }
 }
+
+#' Install a package from Datashield public source repository on GitHub.
+#'
+#' @param opal Opal object or list of opal objects. 
+#' @param pkg Package name.
+#' @param ref Desired git reference. Could be a commit, tag, or branch name. Defaults to "master".
+#' @export
+dsadmin.install_datashield <- function(opal, pkg, ref="master") {
+  opal.install_github(opal, pkg, username="datashield", ref=ref)
+}
