@@ -72,11 +72,20 @@ opal.install_datashield <- function(opal, pkg, ref="master") {
   opal.install_github(opal, pkg, username="datashield", ref=ref)
 }
 
-#' Detach package from the current session.
+#' Load package in the current session.
 #'
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @export
-opal.detach_package <- function(opal, pkg) {
+opal.load_package <- function(opal, pkg) {
+  opal.execute(opal, paste('library("', pkg, '")', sep=''), TRUE)
+}
+
+#' Unload package from the current session.
+#'
+#' @param opal Opal object or list of opal objects.
+#' @param pkg Package name.
+#' @export
+opal.unload_package <- function(opal, pkg) {
   opal.execute(opal, paste('detach("package:', pkg, '", character.only=TRUE, unload=TRUE)', sep=''), TRUE)
 }

@@ -1,0 +1,15 @@
+\name{opal.load_package}
+\alias{opal.load_package}
+\title{Load package in the current session.}
+\usage{
+  opal.load_package(opal, pkg)
+}
+\arguments{
+  \item{opal}{Opal object or list of opal objects.}
+
+  \item{pkg}{Package name.}
+}
+\description{
+  Load package in the current session.
+}
+

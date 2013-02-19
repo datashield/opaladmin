@@ -14,3 +14,4 @@ URL: http://www.obiba.org
 BugReports: http://jira.obiba.org
 Collate:
     'opal.r'
+    'datashield.r'
