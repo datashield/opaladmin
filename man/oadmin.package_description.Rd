@@ -1,8 +1,8 @@
-\name{opal.package_description}
-\alias{opal.package_description}
+\name{oadmin.package_description}
+\alias{oadmin.package_description}
 \title{Get package description from Opal(s).}
 \usage{
-  opal.package_description(opal, pkg)
+  oadmin.package_description(opal, pkg)
 }
 \arguments{
   \item{opal}{Opal object or list of opal objects.}

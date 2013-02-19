@@ -1,8 +1,8 @@
-\name{opal.remove_package}
-\alias{opal.remove_package}
+\name{oadmin.remove_package}
+\alias{oadmin.remove_package}
 \title{Remove package permanently.}
 \usage{
-  opal.remove_package(opal, pkg)
+  oadmin.remove_package(opal, pkg)
 }
 \arguments{
   \item{opal}{Opal object or list of opal objects.}

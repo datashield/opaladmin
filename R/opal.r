@@ -14,11 +14,11 @@
 #' @param pkg Package name.
 #' @param repos Character vector, the base URLs of the repositories to use.
 #' @export
-opal.install_package <- function(opal, pkg, repos=NULL) {
+oadmin.install_package <- function(opal, pkg, repos=NULL) {
   if(is.list(opal)){
-    lapply(opal, function(o){opal.install_package(o, pkg, repos)})
+    lapply(opal, function(o){oadmin.install_package(o, pkg, repos)})
   } else {
-    if (!opal.installed_package(opal, pkg)) {
+    if (!oadmin.installed_package(opal, pkg)) {
       # default repos
       defaultrepos <- c("http://cran.obiba.org/stable","http://cran.rstudio.com")
       # append user provided ones
@@ -34,7 +34,7 @@ opal.install_package <- function(opal, pkg, repos=NULL) {
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @export
-opal.remove_package <- function(opal, pkg) {
+oadmin.remove_package <- function(opal, pkg) {
   resp <- opal.execute(opal, paste('remove.packages("', pkg, '")', sep=''), FALSE)
 }
 
@@ -43,8 +43,8 @@ opal.remove_package <- function(opal, pkg) {
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @export
-opal.installed_package <- function(opal, pkg) {
-  opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''))
+oadmin.installed_package <- function(opal, pkg) {
+  opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''), FALSE)
 }
 
 #' Get package description from Opal(s).
@@ -52,7 +52,7 @@ opal.installed_package <- function(opal, pkg) {
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @export
-opal.package_description <- function(opal, pkg) {
+oadmin.package_description <- function(opal, pkg) {
   if(is.list(opal)){
     lapply(opal, function(o){opal.package_description(o, pkg)})
   } else {
@@ -72,16 +72,16 @@ opal.package_description <- function(opal, pkg) {
 #'
 #' @param opal Opal object or list of opal objects.
 #' @export
-opal.install_devtools <- function(opal) {
-  opal.install_package(opal,'devtools')
+oadmin.install_devtools <- function(opal) {
+  oadmin.install_package(opal,'devtools')
 }
 
 #' Check if devtools package is installed.
 #'
 #' @param opal Opal object or list of opal objects.
 #' @export
-opal.installed_devtools <- function(opal) {
-  opal.installed_package(opal,'devtools')
+oadmin.installed_devtools <- function(opal) {
+  oadmin.installed_package(opal,'devtools')
 }
 
 #' Install a package from a source repository on GitHub. Makes sure devtools package is available.
@@ -93,7 +93,7 @@ opal.installed_devtools <- function(opal) {
 #' @param auth_user Your github username if you're attempting to install a package hosted in a private repository (and your username is different to username).
 #' @param password Your github password
 #' @export
-opal.install_github <- function(opal, pkg , username=getOption("github.user"), ref="master", auth_user=NULL, password=NULL) {
+oadmin.install_github <- function(opal, pkg , username=getOption("github.user"), ref="master", auth_user=NULL, password=NULL) {
   opal.install_devtools(opal)
   cmd <- paste('devtools::install_github("', pkg, '", username="', username, '", ref="', ref, '")', sep="")
   opal.execute(opal, cmd, FALSE)

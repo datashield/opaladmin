@@ -1,8 +1,8 @@
-\name{opal.install_package}
-\alias{opal.install_package}
+\name{oadmin.install_package}
+\alias{oadmin.install_package}
 \title{Install package if not already available.}
 \usage{
-  opal.install_package(opal, pkg, repos = NULL)
+  oadmin.install_package(opal, pkg, repos = NULL)
 }
 \arguments{
   \item{opal}{Opal object or list of opal objects.}

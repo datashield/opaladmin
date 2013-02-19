@@ -92,5 +92,5 @@ dsadmin.get_methods <- function(opal, type="aggregate") {
 #' @param ref Desired git reference. Could be a commit, tag, or branch name. Defaults to "master".
 #' @export
 dsadmin.install_datashield <- function(opal, pkg, ref="master") {
-  opal.install_github(opal, pkg, username="datashield", ref=ref)
+  oadmin.install_github(opal, pkg, username="datashield", ref=ref)
 }

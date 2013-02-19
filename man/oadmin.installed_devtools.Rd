@@ -1,8 +1,8 @@
-\name{opal.installed_devtools}
-\alias{opal.installed_devtools}
+\name{oadmin.installed_devtools}
+\alias{oadmin.installed_devtools}
 \title{Check if devtools package is installed.}
 \usage{
-  opal.installed_devtools(opal)
+  oadmin.installed_devtools(opal)
 }
 \arguments{
   \item{opal}{Opal object or list of opal objects.}
