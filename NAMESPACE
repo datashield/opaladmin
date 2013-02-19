@@ -1,6 +1,6 @@
 export(dsadmin.get_method)
 export(dsadmin.get_methods)
-export(dsadmin.install_datashield)
+export(dsadmin.install_package)
 export(dsadmin.rm_method)
 export(dsadmin.set_method)
 export(oadmin.install_devtools)

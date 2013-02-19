@@ -1,6 +1,6 @@
 \name{oadmin.package_description}
 \alias{oadmin.package_description}
-\title{Get package description from Opal(s).}
+\title{Get Package Descriptions}
 \usage{
   oadmin.package_description(opal, pkg)
 }

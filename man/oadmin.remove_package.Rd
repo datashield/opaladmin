@@ -1,6 +1,6 @@
 \name{oadmin.remove_package}
 \alias{oadmin.remove_package}
-\title{Remove package permanently.}
+\title{Remove Package}
 \usage{
   oadmin.remove_package(opal, pkg)
 }
@@ -10,6 +10,6 @@
   \item{pkg}{Package name.}
 }
 \description{
-  Remove package permanently.
+  Remove package permanently from Opal(s).
 }
 

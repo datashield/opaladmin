@@ -85,12 +85,18 @@ dsadmin.get_methods <- function(opal, type="aggregate") {
   }
 }
 
-#' Install a package from Datashield public source repository on GitHub.
+#' Install a package from Datashield public package repository or (if Git reference is provided) from Datashield source repository on GitHub.
+#'
+#' @title Install Datashield Package
 #'
 #' @param opal Opal object or list of opal objects. 
 #' @param pkg Package name.
-#' @param ref Desired git reference. Could be a commit, tag, or branch name. Defaults to "master".
+#' @param ref Desired git reference (could be a commit, tag, or branch name). If NULL (default), try to install from Datashield package repository.
 #' @export
-dsadmin.install_datashield <- function(opal, pkg, ref="master") {
-  oadmin.install_github(opal, pkg, username="datashield", ref=ref)
+dsadmin.install_package <- function(opal, pkg, ref=NULL) {
+  if (is.null(ref)) {
+    oadmin.install_package(opal, pkg)
+  } else {
+    oadmin.install_github(opal, pkg, username="datashield", ref=ref)
+  }
 }

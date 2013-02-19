@@ -8,11 +8,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #-------------------------------------------------------------------------------
 
-#' Install package if not already available.
+#' Install package if not already available in Opal(s). To install the latest version of a package, it has to be removed first.
+#' 
+#' @title Install Package
 #'
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
 #' @param repos Character vector, the base URLs of the repositories to use.
+#' @return TRUE if successfully installed
 #' @export
 oadmin.install_package <- function(opal, pkg, repos=NULL) {
   if(is.list(opal)){
@@ -25,11 +28,16 @@ oadmin.install_package <- function(opal, pkg, repos=NULL) {
       repostr <- paste('"', append(defaultrepos, repos),'"',collapse=',',sep='')
       cmd <- paste('install.packages("', pkg, '", repos=c(getOption("repos"),', repostr ,'), dependencies=TRUE)', sep='')
       resp <- opal.execute(opal, cmd, FALSE)
+      oadmin.installed_package(opal, pkg)
+    } else {
+      TRUE
     }
   }
 }
 
-#' Remove package permanently.
+#' Remove package permanently from Opal(s).
+#'
+#' @title Remove Package
 #'
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
@@ -38,16 +46,19 @@ oadmin.remove_package <- function(opal, pkg) {
   resp <- opal.execute(opal, paste('remove.packages("', pkg, '")', sep=''), FALSE)
 }
 
-#' Check if a package is installed.
+#' Check if a package is installed in Opal(s).
 #'
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
+#' @return TRUE if installed
 #' @export
 oadmin.installed_package <- function(opal, pkg) {
   opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''), FALSE)
 }
 
 #' Get package description from Opal(s).
+#' 
+#' @title Get Package Descriptions
 #'
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
@@ -97,6 +108,7 @@ oadmin.install_github <- function(opal, pkg , username=getOption("github.user"),
   opal.install_devtools(opal)
   cmd <- paste('devtools::install_github("', pkg, '", username="', username, '", ref="', ref, '")', sep="")
   opal.execute(opal, cmd, FALSE)
+  oadmin.installed_package(opal, pkg)
 }
 
 #' Load package in the current session.
