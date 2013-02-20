@@ -2,12 +2,17 @@
 \alias{oadmin.package_description}
 \title{Get Package Descriptions}
 \usage{
-  oadmin.package_description(opal, pkg)
+  oadmin.package_description(opal, pkg, fields = NULL)
 }
 \arguments{
   \item{opal}{Opal object or list of opal objects.}
 
   \item{pkg}{Package name.}
+
+  \item{fields}{A character vector giving the fields to
+  extract from each package's DESCRIPTION file in addition
+  to the default ones, or NULL (default). Unavailable
+  fields result in NA values.}
 }
 \description{
   Get package description from Opal(s).

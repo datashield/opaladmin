@@ -62,12 +62,15 @@ oadmin.installed_package <- function(opal, pkg) {
 #'
 #' @param opal Opal object or list of opal objects.
 #' @param pkg Package name.
+#' @param fields A character vector giving the fields to extract from each package's DESCRIPTION file in addition to the default ones, or NULL (default). Unavailable fields result in NA values.
 #' @export
-oadmin.package_description <- function(opal, pkg) {
+oadmin.package_description <- function(opal, pkg, fields=NULL) {
   if(is.list(opal)){
     lapply(opal, function(o){opal.package_description(o, pkg)})
   } else {
-    inst <- opal.execute(opal, paste('installed.packages(fields=c("AggregateMethods","AssignMethods"))', sep=''), FALSE)
+    # always query for Datashield fields
+    fields <- append(c("Title","Description","Author","Maintainer","Date/Publication","AggregateMethods","AssignMethods"), fields)
+    inst <- opal.execute(opal, paste('installed.packages(fields=c("', paste(fields, collapse='","') ,'"))', sep=''), FALSE)
     desc <- NULL
     for (i in 1:nrow(inst)) {
       if(inst[i]==pkg) { 
