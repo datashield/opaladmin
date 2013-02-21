@@ -96,6 +96,28 @@ dsadmin.remove_package <- function(opal, pkg) {
   }
 }
 
+#' Check if a Datashield package is installed in Opal(s).
+#'
+#' @param opal Opal object or list of opal objects.
+#' @param pkg Package name.
+#' @return TRUE if installed
+#' @export
+dsadmin.installed_package <- function(opal, pkg) {
+  if(is.list(opal)){
+    resp <- lapply(opal, function(o){dsadmin.installed_package(o, pkg)})
+  } else {
+    opal:::.get(opal, "datashield", "package", pkg, callback=function(r){
+      if(r$code == 404) {
+        FALSE
+      } else if (r$code >= 400) {
+        NULL
+      } else {
+        TRUE
+      }
+    })
+  }
+}
+
 #' Set a Datashield method in Opal(s).
 #' 
 #' @title Set Datashield Method
@@ -209,10 +231,9 @@ dsadmin.set_package_methods <- function(opal, pkg, type=NULL) {
   if(is.list(opal)){
     lapply(opal, function(o){dsadmin.set_package_methods(o, pkg, type)})
   } else {
-    if (oadmin.installed_package(opal,pkg)) {
+    if (dsadmin.installed_package(opal,pkg)) {
       # get description
-      desc <- oadmin.package_description(opal, pkg)
-    
+      desc <- dsadmin.package_description(opal, pkg)
       .dsadmin.methods_mapper(desc, type, function(map, type) {
         # apply default mapping function
         f <- paste(pkg,map[1],sep='::')
@@ -242,7 +263,7 @@ dsadmin.rm_package_methods <- function(opal, pkg, type=NULL) {
     lapply(opal, function(o){dsadmin.rm_package_methods(o, pkg, type)})
   } else {
     # get description
-    desc <- oadmin.package_description(opal, pkg)
+    desc <- dsadmin.package_description(opal, pkg)
     
     .dsadmin.methods_mapper(desc, type, function(map, type) {
       dsadmin.rm_method(opal, map[1], type=type)
