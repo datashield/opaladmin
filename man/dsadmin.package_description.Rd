@@ -1,0 +1,18 @@
+\name{dsadmin.package_description}
+\alias{dsadmin.package_description}
+\title{Get Datashield Package Description}
+\usage{
+  dsadmin.package_description(opal, pkg, fields = NULL)
+}
+\arguments{
+  \item{opal}{Opal object or list of opal objects.}
+
+  \item{fields}{A character vector giving the fields to
+  extract from each package's DESCRIPTION file in addition
+  to the default ones, or NULL (default). Unavailable
+  fields result in NA values.}
+}
+\description{
+  Get Datashield package description from Opal(s).
+}
+
