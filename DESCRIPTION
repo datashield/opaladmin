@@ -4,7 +4,7 @@ Title: Opal R and datashield administration utils
 Author: OBiBa <info@obiba.org>
 Maintainer: OBiBa <info@obiba.org>
 Description: R toolbox to configure the R server behind Opal.
-Imports:
+Depends:
     opal
 Suggests:
     devtools,
