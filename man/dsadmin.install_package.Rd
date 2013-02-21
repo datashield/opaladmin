@@ -13,6 +13,9 @@
   or branch name). If NULL (default), try to install from
   Datashield package repository.}
 }
+\value{
+  TRUE if installed
+}
 \description{
   Install a package from Datashield public package
   repository or (if Git reference is provided) from
