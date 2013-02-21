@@ -24,6 +24,9 @@ oadmin.install_package <- function(opal, pkg, repos=NULL) {
     if (!oadmin.installed_package(opal, pkg)) {
       # default repos
       defaultrepos <- c(getOption("repos"), "http://cran.obiba.org/stable", "http://cran.rstudio.com")
+      if (getOption("repos") != "@CRAN@") {
+        defaultrepos <- append(defaultrepos, getOption("repos"))
+      }
       # append user provided ones
       repostr <- paste('"', append(defaultrepos, repos),'"',collapse=',',sep='')
       cmd <- paste('install.packages("', pkg, '", repos=c(', repostr ,'), dependencies=TRUE)', sep='')
