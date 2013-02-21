@@ -23,10 +23,10 @@ oadmin.install_package <- function(opal, pkg, repos=NULL) {
   } else {
     if (!oadmin.installed_package(opal, pkg)) {
       # default repos
-      defaultrepos <- c("http://cran.obiba.org/stable","http://cran.rstudio.com")
+      defaultrepos <- c(getOption("repos"), "http://cran.obiba.org/stable", "http://cran.rstudio.com")
       # append user provided ones
       repostr <- paste('"', append(defaultrepos, repos),'"',collapse=',',sep='')
-      cmd <- paste('install.packages("', pkg, '", repos=c(getOption("repos"),', repostr ,'), dependencies=TRUE)', sep='')
+      cmd <- paste('install.packages("', pkg, '", repos=c(', repostr ,'), dependencies=TRUE)', sep='')
       resp <- opal.execute(opal, cmd, FALSE)
       oadmin.installed_package(opal, pkg)
     } else {
