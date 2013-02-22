@@ -143,9 +143,7 @@ dsadmin.set_method <- function(opal, name, func=NULL, path=NULL, type="aggregate
     } else {
       methodDto <- paste('{"name":"', name, '","DataShield.RFunctionDataShieldMethodDto.method":{"func":"', func, '"}}', sep='')
     }
-    # TODO check if method exists: create or update
     dsadmin.rm_method(opal, name, type=type)
-    #print(methodDto)
     opal:::.post(opal, "datashield", "env", type, "methods", body=methodDto, contentType="application/json");
   }
 }
@@ -234,17 +232,18 @@ dsadmin.set_package_methods <- function(opal, pkg, type=NULL) {
     lapply(opal, function(o){dsadmin.set_package_methods(o, pkg, type)})
   } else {
     if (dsadmin.installed_package(opal,pkg)) {
-      # get description
-      desc <- dsadmin.package_description(opal, pkg)
-      .dsadmin.methods_mapper(desc, type, function(map, type) {
-        # apply default mapping function
-        f <- paste(pkg,map[1],sep='::')
-        # apply specified one
-        if(length(map)>1) {
-          f <- map[2]
-        }
-        dsadmin.set_method(opal, map[1], func=f, type=type)
-      })
+      # get methods
+      methods <- opal:::.get(opal, "datashield", "package", pkg, "methods")
+      if ((is.null(type) || type == "aggregate")) {
+        lapply(methods$aggregate, function(dto) {
+          dsadmin.set_method(o, dto$name, func=dto$DataShield.RFunctionDataShieldMethodDto.method$func, type='aggregate')
+        })
+      }
+      if ((is.null(type) || type == "assign")) {
+        lapply(methods$assign, function(dto) {
+          dsadmin.set_method(o, dto$name, func=dto$DataShield.RFunctionDataShieldMethodDto.method$func, type='assign')
+        })
+      }
       TRUE
     } else {
       FALSE
@@ -264,43 +263,17 @@ dsadmin.rm_package_methods <- function(opal, pkg, type=NULL) {
   if(is.list(opal)){
     lapply(opal, function(o){dsadmin.rm_package_methods(o, pkg, type)})
   } else {
-    # get description
-    desc <- dsadmin.package_description(opal, pkg)
-    
-    .dsadmin.methods_mapper(desc, type, function(map, type) {
-      dsadmin.rm_method(opal, map[1], type=type)
-    })
-  }
-}
-
-.dsadmin.methods_mapper <- function(desc, type, consumer) {
-  # map a symbol to a function name
-  mapper <- function(descValues, type) {
-    .dsadmin.methods_parser(descValues, type, consumer)
-  }
-  
-  if (!is.null(type) && type == "aggregate") {
-    mapper(desc$AggregateMethods, type)
-  } else if (!is.null(type) && type == "assign") {
-    mapper(desc$AssignMethods, type)
-  } else {
-    mapper(desc$AggregateMethods, "aggregate")
-    mapper(desc$AssignMethods, "assign")
-  }
-}
-
-
-#' Parser of methods specified in the Description file.
-#' @keywords internal
-.dsadmin.methods_parser <- function(descValues, type, consumer) {
-  for (str in descValues) {
-    for (splitted in strsplit(str,split=",")) {
-      methods <- gsub("^\\s+|\\s+$", "", splitted)
-      for (m in methods) {
-        # mapping function can have been specified in the Description file
-        map <- strsplit(m,split="=")[[1]]
-        consumer(map, type)
-      }
+    # get methods
+    methods <- opal:::.get(opal, "datashield", "package", pkg, "methods")
+    if (is.null(type) || type == "aggregate") {
+      rval <- lapply(methods$aggregate, function(dto) {
+        dsadmin.rm_method(o, dto$name, type='aggregate')
+      })
+    }
+    if (is.null(type) || type == "assign") {
+      rval <- lapply(methods$assign, function(dto) {
+        dsadmin.rm_method(o, dto$name, type='assign')
+      })
     }
   }
 }
