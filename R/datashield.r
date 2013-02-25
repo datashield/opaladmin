@@ -94,7 +94,7 @@ dsadmin.remove_package <- function(opal, pkg) {
   if(is.list(opal)){
     resp <- lapply(opal, function(o){dsadmin.remove_package(o, pkg)})
   } else {
-    resp <- opal:::.delete(opal, "datashield", "package", pkg, callback=function(r){})
+    resp <- opal:::.delete(opal, "datashield", "package", pkg, callback=function(o,r){})
   }
 }
 
@@ -108,7 +108,7 @@ dsadmin.installed_package <- function(opal, pkg) {
   if(is.list(opal)){
     resp <- lapply(opal, function(o){dsadmin.installed_package(o, pkg)})
   } else {
-    opal:::.get(opal, "datashield", "package", pkg, callback=function(r){
+    opal:::.get(opal, "datashield", "package", pkg, callback=function(o,r){
       if(r$code == 404) {
         FALSE
       } else if (r$code >= 400) {
@@ -161,7 +161,7 @@ dsadmin.rm_method <- function(opal, name, type="aggregate") {
     lapply(opal, function(o){dsadmin.rm_method(o, name, type=type)})
   } else {
     # ignore errors and returned value
-    resp <- opal:::.delete(opal, "datashield", "env", type, "method", name, callback=function(r){})
+    resp <- opal:::.delete(opal, "datashield", "env", type, "method", name, callback=function(o,r){})
   }
 }
 
@@ -182,7 +182,7 @@ dsadmin.rm_methods <- function(opal, type=NULL) {
       dsadmin.rm_methods(opal, type="aggregate")
       dsadmin.rm_methods(opal, type="assign")
     } else {
-      resp <- opal:::.delete(opal, "datashield", "env", type, "methods", callback=function(r){})
+      resp <- opal:::.delete(opal, "datashield", "env", type, "methods", callback=function(o,r){})
     }
   }
 }
