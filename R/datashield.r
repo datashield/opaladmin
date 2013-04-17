@@ -232,18 +232,8 @@ dsadmin.set_package_methods <- function(opal, pkg, type=NULL) {
     lapply(opal, function(o){dsadmin.set_package_methods(o, pkg, type)})
   } else {
     if (dsadmin.installed_package(opal,pkg)) {
-      # get methods
-      methods <- opal:::.get(opal, "datashield", "package", pkg, "methods")
-      if ((is.null(type) || type == "aggregate")) {
-        lapply(methods$aggregate, function(dto) {
-          dsadmin.set_method(o, dto$name, func=dto$DataShield.RFunctionDataShieldMethodDto.method$func, type='aggregate')
-        })
-      }
-      if ((is.null(type) || type == "assign")) {
-        lapply(methods$assign, function(dto) {
-          dsadmin.set_method(o, dto$name, func=dto$DataShield.RFunctionDataShieldMethodDto.method$func, type='assign')
-        })
-      }
+      # put methods
+      methods <- opal:::.put(opal, "datashield", "package", pkg, "methods")
       TRUE
     } else {
       FALSE
