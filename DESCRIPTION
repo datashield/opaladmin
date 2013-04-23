@@ -10,7 +10,7 @@ Suggests:
     devtools,
     roxygen2
 License: GPL-3
-OpalVersion: >= 1.3.0
+OpalVersion: >= 1.14.0
 URL: http://www.obiba.org
 BugReports: http://jira.obiba.org
 Collate:
