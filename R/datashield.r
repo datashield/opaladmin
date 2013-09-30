@@ -48,9 +48,9 @@ dsadmin.package_description <- function(opal, pkg, fields=NULL) {
   if(is.list(opal)){
     lapply(opal, function(o){dsadmin.package_description(o, pkg,fields=fields)})
   } else {
-    query <- list()
-    if (!is.null(fields) && length(fields)) {
-      query <- append(query,list(fields=paste(fields, collapse=',')))
+    query <- NULL
+    if (!is.null(fields) && length(fields) > 0) {
+      query <- list(fields=paste(fields, collapse=','))
     }
     dto <- opal:::.get(opal, "datashield", "package", pkg, query=query)
     packageDescription <- list()
@@ -199,7 +199,14 @@ dsadmin.get_method <- function(opal, name, type="aggregate") {
   if(is.list(opal)){
     lapply(opal, function(o){dsadmin.get_method(o, name, type=type)})
   } else {
-    opal:::.get(opal, "datashield", "env", type, "method", name)
+    m <- opal:::.get(opal, "datashield", "env", type, "method", name)
+    class <- "function"
+    value <- m$DataShield.RFunctionDataShieldMethodDto.method$func
+    if (is.null(value)) {
+      class <- "script"
+      value <- m$DataShield.RScriptDataShieldMethodDto.method$script
+    }
+    list(name=m$name, type=type, class=class, value=value)
   }
 }
 
@@ -211,11 +218,43 @@ dsadmin.get_method <- function(opal, name, type="aggregate") {
 #' @param type Type of the method: "aggregate" (default) or "assign"
 #' @export
 dsadmin.get_methods <- function(opal, type="aggregate") {
+  rval <- NULL
   if(is.list(opal)){
-    lapply(opal, function(o){dsadmin.get_methods(o, type=type)})
+    rval <- lapply(opal, function(o){dsadmin.get_methods(o, type=type)})
+    
   } else {
-    opal:::.get(opal, "datashield", "env", type, "methods")
+    rlist <- opal:::.get(opal, "datashield", "env", type, "methods")
+    name <- lapply(rlist,function(m){
+      m$name
+    })
+    t <- lapply(rlist,function(m){
+      type
+    })
+    class <- lapply(rlist,function(m){
+      if (is.null(m$DataShield.RFunctionDataShieldMethodDto.method$func)) {
+        "script"
+      } else {
+        "function"
+      }
+    })
+    value <- lapply(rlist,function(m){
+      val <- m$DataShield.RFunctionDataShieldMethodDto.method$func
+      if (is.null(val)) {
+        val <- m$DataShield.RScriptDataShieldMethodDto.method$script
+      }
+      val
+    })
+    value <- lapply(rlist,function(m){
+      val <- m$DataShield.RFunctionDataShieldMethodDto.method$func
+      if (is.null(val)) {
+        val <- m$DataShield.RScriptDataShieldMethodDto.method$script
+      }
+      val
+    })
+    rval <- data.frame(unlist(name), unlist(t), unlist(class), unlist(value))
+    colnames(rval) <- c("name","type", "class", "value")
   }
+  rval
 }
 
 #' Declare Datashield aggregate and assign methods as defined by the package.
