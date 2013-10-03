@@ -218,43 +218,7 @@ dsadmin.get_method <- function(opal, name, type="aggregate") {
 #' @param type Type of the method: "aggregate" (default) or "assign"
 #' @export
 dsadmin.get_methods <- function(opal, type="aggregate") {
-  rval <- NULL
-  if(is.list(opal)){
-    rval <- lapply(opal, function(o){dsadmin.get_methods(o, type=type)})
-    
-  } else {
-    rlist <- opal:::.get(opal, "datashield", "env", type, "methods")
-    name <- lapply(rlist,function(m){
-      m$name
-    })
-    t <- lapply(rlist,function(m){
-      type
-    })
-    class <- lapply(rlist,function(m){
-      if (is.null(m$DataShield.RFunctionDataShieldMethodDto.method$func)) {
-        "script"
-      } else {
-        "function"
-      }
-    })
-    value <- lapply(rlist,function(m){
-      val <- m$DataShield.RFunctionDataShieldMethodDto.method$func
-      if (is.null(val)) {
-        val <- m$DataShield.RScriptDataShieldMethodDto.method$script
-      }
-      val
-    })
-    value <- lapply(rlist,function(m){
-      val <- m$DataShield.RFunctionDataShieldMethodDto.method$func
-      if (is.null(val)) {
-        val <- m$DataShield.RScriptDataShieldMethodDto.method$script
-      }
-      val
-    })
-    rval <- data.frame(unlist(name), unlist(t), unlist(class), unlist(value))
-    colnames(rval) <- c("name","type", "class", "value")
-  }
-  rval
+  datashield.methods(opal, type)
 }
 
 #' Declare Datashield aggregate and assign methods as defined by the package.
