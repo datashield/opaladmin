@@ -69,7 +69,7 @@ oadmin.installed_package <- function(opal, pkg) {
 #' @export
 oadmin.package_description <- function(opal, pkg, fields=NULL) {
   if(is.list(opal)){
-    lapply(opal, function(o){opal.package_description(o, pkg, fields=fields)})
+    lapply(opal, function(o){oadmin.package_description(o, pkg, fields=fields)})
   } else {
     # always query for Datashield fields
     fields <- append(c("Title","Description","Author","Maintainer","Date/Publication","AggregateMethods","AssignMethods"), fields)
