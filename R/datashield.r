@@ -202,11 +202,22 @@ dsadmin.get_method <- function(opal, name, type="aggregate") {
     m <- opal:::.get(opal, "datashield", "env", type, "method", name)
     class <- "function"
     value <- m$DataShield.RFunctionDataShieldMethodDto.method$func
+    pkg <- NA
+    version <- NA
     if (is.null(value)) {
       class <- "script"
       value <- m$DataShield.RScriptDataShieldMethodDto.method$script
+    } else {
+      pkg <- m$DataShield.RFunctionDataShieldMethodDto.method$rPackage
+      if (is.null(pkg)) {
+        pkg <- NA
+      }
+      version <- m$DataShield.RFunctionDataShieldMethodDto.method$version
+      if (is.null(version)) {
+        version <- NA
+      }
     }
-    list(name=m$name, type=type, class=class, value=value)
+    list(name=m$name, type=type, class=class, value=value, package=pkg, version=version)
   }
 }
 
