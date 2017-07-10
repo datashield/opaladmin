@@ -111,7 +111,7 @@ oadmin.installed_devtools <- function(opal) {
 #' @param password Your github password
 #' @export
 oadmin.install_github <- function(opal, pkg , username=getOption("github.user"), ref="master", auth_user=NULL, password=NULL) {
-  opal.install_devtools(opal)
+  oadmin.install_devtools(opal)
   cmd <- paste('devtools::install_github("', pkg, '", username="', username, '", ref="', ref, '")', sep="")
   opal.execute(opal, cmd, FALSE)
   oadmin.installed_package(opal, pkg)
