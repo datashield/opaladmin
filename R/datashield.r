@@ -42,6 +42,7 @@ dsadmin.package_descriptions <- function(opal, fields=NULL) {
 #' @title Get Datashield Package Description
 #'
 #' @param opal Opal object or list of opal objects.
+#' @param pkg Package name.
 #' @param fields A character vector giving the fields to extract from each package's DESCRIPTION file in addition to the default ones, or NULL (default). Unavailable fields result in NA values.
 #' @export
 dsadmin.package_description <- function(opal, pkg, fields=NULL) {
@@ -61,22 +62,24 @@ dsadmin.package_description <- function(opal, pkg, fields=NULL) {
   }
 }
 
-#' Install a package from Datashield public package repository or (if Git reference is provided) from Datashield source repository on GitHub.
+#' Install a package from Datashield public package repository or (if Git reference and GitHub username is provided) from Datashield source repository on GitHub.
 #'
 #' @title Install Datashield Package
 #'
 #' @param opal Opal object or list of opal objects. 
 #' @param pkg Package name.
+#' @param githubusername GitHub username of git repository. If NULL (default), try to install from Datashield package repository. 
 #' @param ref Desired git reference (could be a commit, tag, or branch name). If NULL (default), try to install from Datashield package repository.
 #' @return TRUE if installed
 #' @export
-dsadmin.install_package <- function(opal, pkg, ref=NULL) {
+dsadmin.install_package <- function(opal, pkg, githubusername=NULL, ref=NULL) {
   if(is.list(opal)){
-    lapply(opal, function(o){dsadmin.install_package(o, pkg, ref=ref)})
+    lapply(opal, function(o){dsadmin.install_package(o, pkg, githubusername=githubusername, ref=ref)})
   } else {
-    query <- list(name=pkg)
-    if (!is.null(ref)) {
-      query <- append(query,list(ref=ref))
+    if((!is.null(ref)) && (!is.null(githubusername))) {
+      query <- list(name=paste(githubusername,pkg,sep="/"),ref=ref)
+    } else {
+      query <- list(name=pkg)
     }
     opal:::.post(opal, "datashield", "packages", query=query)
     dsadmin.installed_package(opal, pkg)
@@ -170,7 +173,6 @@ dsadmin.rm_method <- function(opal, name, type="aggregate") {
 #' @title Remove Datashield Methods
 #' 
 #' @param opal Opal object or list of opal objects.
-#' @param name Name of the method, as it is accessed by Datashield users.
 #' @param type Type of the method: "aggregate" or "assign". Default is NULL (=all type of methods).
 #' @export
 dsadmin.rm_methods <- function(opal, type=NULL) {
