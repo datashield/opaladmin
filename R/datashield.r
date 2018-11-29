@@ -335,7 +335,7 @@ dsadmin.rm_option <- function (opal, name) {
   if(is.list(opal)) {
     lapply(opal, function(o){dsadmin.rm_option(o, name)})
   } else {
-    # set option
+    # rm option
     ignore <- opal:::.delete(opal, "datashield", "option", query=list(name=name))
   }
 }
