@@ -231,7 +231,7 @@ dsadmin.get_method <- function(opal, name, type="aggregate") {
 #' @param type Type of the method: "aggregate" (default) or "assign"
 #' @export
 dsadmin.get_methods <- function(opal, type="aggregate") {
-  datashield.methods(opal, type)
+  opal::datashield.methods(opal, type)
 }
 
 #' Declare Datashield aggregate and assign methods as defined by the package.
@@ -266,20 +266,76 @@ dsadmin.set_package_methods <- function(opal, pkg, type=NULL) {
 #' @param type Type of the method: "aggregate" or "assign". Default is NULL (=all type of methods).
 #' @export
 dsadmin.rm_package_methods <- function(opal, pkg, type=NULL) {
-  if(is.list(opal)){
+  if(is.list(opal)) {
     lapply(opal, function(o){dsadmin.rm_package_methods(o, pkg, type)})
   } else {
     # get methods
     methods <- opal:::.get(opal, "datashield", "package", pkg, "methods")
     if (is.null(type) || type == "aggregate") {
       rval <- lapply(methods$aggregate, function(dto) {
-        dsadmin.rm_method(o, dto$name, type='aggregate')
+        dsadmin.rm_method(opal, dto$name, type='aggregate')
       })
     }
     if (is.null(type) || type == "assign") {
       rval <- lapply(methods$assign, function(dto) {
-        dsadmin.rm_method(o, dto$name, type='assign')
+        dsadmin.rm_method(opal, dto$name, type='assign')
       })
     }
+  }
+}
+
+#' Get the Datashield options.
+#'
+#' @title Get Datashield Options
+#'
+#' @param opal Opal object or list of opal objects.
+#' @export
+dsadmin.get_options <- function (opal) {
+  if(is.list(opal)) {
+    lapply(opal, function(o){dsadmin.get_options(o)})
+  } else {
+    # get options
+    options <- opal:::.get(opal, "datashield", "options")
+    names <- lapply(options, function(opt) {
+      opt$name
+    })
+    values <- lapply(options, function(opt) {
+      opt$value
+    })
+    data.frame(name=unlist(names), value=unlist(values))
+  }
+}
+
+#' Set a Datashield option (add or update).
+#'
+#' @title Set Datashield Option
+#'
+#' @param opal Opal object or list of opal objects.
+#' @param name Name of the option
+#' @param value Value of the option
+#' @export
+dsadmin.set_option <- function (opal, name, value) {
+  if(is.list(opal)) {
+    lapply(opal, function(o){dsadmin.set_option(o, name, value)})
+  } else {
+    # set option
+    payload <- paste0("{name:'", name ,"',value:'", value,"'}")
+    ignore <- opal:::.post(opal, "datashield", "option", body=payload, contentType="application/json")
+  }
+}
+
+#' Remove a Datashield option.
+#'
+#' @title Remove Datashield Option
+#'
+#' @param opal Opal object or list of opal objects.
+#' @param name Name of the option
+#' @export
+dsadmin.rm_option <- function (opal, name) {
+  if(is.list(opal)) {
+    lapply(opal, function(o){dsadmin.rm_option(o, name)})
+  } else {
+    # set option
+    ignore <- opal:::.delete(opal, "datashield", "option", query=list(name=name))
   }
 }

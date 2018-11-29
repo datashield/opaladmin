@@ -1,5 +1,5 @@
 Package: opaladmin
-Version: 1.19
+Version: 1.20.0
 Title: Opal R and Datashield administration utils
 Author: OBiBa <info@obiba.org>
 Maintainer: OBiBa <info@obiba.org>
@@ -7,8 +7,7 @@ Description: R toolbox to configure the R server behind Opal.
 Depends:
     opal
 Suggests:
-    devtools,
-    roxygen2
+    devtools
 License: GPL-3
 OpalVersion: >= 1.14.0
 URL: http://www.obiba.org
@@ -16,3 +15,4 @@ BugReports: http://jira.obiba.org
 Collate:
     'opal.r'
     'datashield.r'
+RoxygenNote: 6.1.1

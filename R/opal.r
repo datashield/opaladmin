@@ -30,7 +30,7 @@ oadmin.install_package <- function(opal, pkg, repos=NULL) {
       # append user provided ones
       repostr <- paste('"', append(defaultrepos, repos),'"',collapse=',',sep='')
       cmd <- paste('install.packages("', pkg, '", repos=c(', repostr ,'), dependencies=TRUE)', sep='')
-      resp <- opal.execute(opal, cmd, FALSE)
+      resp <- opal::opal.execute(opal, cmd, FALSE)
       oadmin.installed_package(opal, pkg)
     } else {
       TRUE
@@ -46,7 +46,7 @@ oadmin.install_package <- function(opal, pkg, repos=NULL) {
 #' @param pkg Package name.
 #' @export
 oadmin.remove_package <- function(opal, pkg) {
-  resp <- opal.execute(opal, paste('remove.packages("', pkg, '")', sep=''), FALSE)
+  resp <- opal::opal.execute(opal, paste('remove.packages("', pkg, '")', sep=''), FALSE)
 }
 
 #' Check if a package is installed in Opal(s).
@@ -56,7 +56,7 @@ oadmin.remove_package <- function(opal, pkg) {
 #' @return TRUE if installed
 #' @export
 oadmin.installed_package <- function(opal, pkg) {
-  opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''), FALSE)
+  opal::opal.execute(opal, paste('require("', pkg, '", character.only=TRUE)', sep=''), FALSE)
 }
 
 #' Get package description from Opal(s).
@@ -73,7 +73,7 @@ oadmin.package_description <- function(opal, pkg, fields=NULL) {
   } else {
     # always query for Datashield fields
     fields <- append(c("Title","Description","Author","Maintainer","Date/Publication","AggregateMethods","AssignMethods"), fields)
-    inst <- opal.execute(opal, paste('installed.packages(fields=c("', paste(fields, collapse='","') ,'"))', sep=''), FALSE)
+    inst <- opal::opal.execute(opal, paste('installed.packages(fields=c("', paste(fields, collapse='","') ,'"))', sep=''), FALSE)
     desc <- NULL
     for (i in 1:nrow(inst)) {
       if(inst[i]==pkg) { 
@@ -113,7 +113,7 @@ oadmin.installed_devtools <- function(opal) {
 oadmin.install_github <- function(opal, pkg , username=getOption("github.user"), ref="master", auth_user=NULL, password=NULL) {
   oadmin.install_devtools(opal)
   cmd <- paste('devtools::install_github("', pkg, '", username="', username, '", ref="', ref, '")', sep="")
-  opal.execute(opal, cmd, FALSE)
+  opal::opal.execute(opal, cmd, FALSE)
   oadmin.installed_package(opal, pkg)
 }
 
@@ -123,7 +123,7 @@ oadmin.install_github <- function(opal, pkg , username=getOption("github.user"),
 #' @param pkg Package name.
 #' @export
 opal.load_package <- function(opal, pkg) {
-  opal.execute(opal, paste('library("', pkg, '")', sep=''), TRUE)
+  opal::opal.execute(opal, paste('library("', pkg, '")', sep=''), TRUE)
 }
 
 #' Unload package from the current session.
@@ -132,5 +132,5 @@ opal.load_package <- function(opal, pkg) {
 #' @param pkg Package name.
 #' @export
 opal.unload_package <- function(opal, pkg) {
-  resp <- opal.execute(opal, paste('detach("package:', pkg, '", character.only=TRUE, unload=TRUE)', sep=''), TRUE)
+  resp <- opal::opal.execute(opal, paste('detach("package:', pkg, '", character.only=TRUE, unload=TRUE)', sep=''), TRUE)
 }
